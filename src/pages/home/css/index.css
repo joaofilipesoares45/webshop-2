@@ -1,0 +1,82 @@
+.page.home {
+    & header {
+        display: grid;
+        grid-template-areas: 'logo opt' 'cat cat';
+        grid-template-columns: auto 40%;
+        justify-content: space-between;
+
+        & #logo {
+            grid-area: logo;
+        }
+
+        & #options {
+            grid-area: opt;
+            justify-content: flex-end;
+        }
+
+        & #categories {
+            grid-area: cat;
+        }
+    }
+
+    & main {
+        min-height: 100%;
+        & section.banner {
+            & .slide-base {
+                & nav {
+                    & button {
+                        background-color: white;
+                        border: none;
+                        padding: 4px;
+
+                        &:hover {
+                            background-color: rgb(118, 0, 0) !important;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .bottom-page {
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        background-color: rgb(40, 0, 0);
+        color: white;
+        width: 100%;
+        padding: 30px 10px;
+
+        h2 {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+
+            span {
+                font-size: .8rem;
+            }
+        }
+
+        .info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+
+            p {
+                font-size: .8rem;
+            }
+
+            nav {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 10px;
+                font-size: 1.3rem;
+            }
+        }
+    }
+}
