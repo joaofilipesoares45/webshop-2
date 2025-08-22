@@ -105,7 +105,7 @@ export default function Slide({ len, children }) {
             }}>
                 {Array.from({ length: len }).map((_, index) => {
                     return (
-                        <button key={"slide-btn" + index} id={index} selected={index === 0 && "true"}></button>
+                        <button key={"slide-btn" + index} id={index} selected={index === 0 && true}></button>
                     )
                 })}
             </nav>

@@ -4,7 +4,6 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { useRef } from "react";
 
 const produtos = [{
-
     nome: "Fone de Ouvido Gamer HyperX Cloud Stinger Core",
     descricao: "Experimente um som imersivo com o HyperX Cloud Stinger Core. Com drivers de 40mm, microfone com cancelamento de ruído e design leve, ele é perfeito para longas sessões de jogo.",
     valor: 299.90,

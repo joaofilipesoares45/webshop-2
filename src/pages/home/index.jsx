@@ -1,38 +1,75 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faCode, faEllipsisVertical, faHeart, faMagnifyingGlass, faShoppingCart } from "@fortawesome/free-solid-svg-icons"
+import { faCartArrowDown, faCartShopping, faCode, faEllipsisVertical, faHeart, faHeartCircleCheck, faMagnifyingGlass, faShoppingCart } from "@fortawesome/free-solid-svg-icons"
 import { faGithub, faInstagram, faLinkedin, faWhatsapp } from "@fortawesome/free-brands-svg-icons";
-import { baseUrl, whatsMsg, openLink, openModal } from "../../utils/functions"
+import { baseUrl, whatsMsg, openLink, openModal, numberForBrl } from "../../utils/functions"
 import Slide from "../../components/Slide"
 import "./css/index.css"
 import SearchModal from "./components/SearchModal";
+import { saveData } from "../../utils/save-functions";
+import FavoritesModal from "./components/FavoritesModal";
+import { useContext } from "react";
+import { DataContext } from "../../context/DataContext";
+import CartModal from "./components/CartModal";
 
 const produtos = [{
-
     nome: "Fone de Ouvido Gamer HyperX Cloud Stinger Core",
     descricao: "Experimente um som imersivo com o HyperX Cloud Stinger Core. Com drivers de 40mm, microfone com cancelamento de ruído e design leve, ele é perfeito para longas sessões de jogo.",
     valor: 299.90,
     lista_img: ["produto 1"],
-    categoria: "eletronicogamer"
+    categoria: "eletronicogamer",
+    id: 0
 }, {
 
     nome: "Câmera Digital Sony Alpha 6400",
     descricao: "Libere o fotógrafo que existe em você com a Sony Alpha 6400. Com sensor APS-C de 24.2MP, foco automático rápido e gravação de vídeo 4K, ela é ideal para capturar momentos incríveis com qualidade profissional.",
-    valor: 4999.00,
+    valor: 999.00,
     lista_img: ["produto 2"],
-    categoria: "camera"
+    categoria: "camera",
+    id: 1
 }, {
 
     nome: "Smartphone Xiaomi Redmi Note 11",
     descricao: "O Redmi Note 11 é a escolha perfeita para quem busca um smartphone com ótimo custo-benefício. Com tela AMOLED de 90Hz, câmera de 50MP e bateria de longa duração, ele oferece performance e design impecáveis.",
     valor: 1499.00,
     lista_img: ["produto 3"],
-    categoria: "smart"
+    categoria: "smart",
+    id: 2
 }]
 
 export default function Home() {
+    const { favorites, setFavorites, cartShop, setCartShop } = useContext(DataContext)
+
+    const newFavorite = (item) => {
+        setFavorites(saveData("local-s", "favorites", 'vbnv', 0, 0, item))
+    }
+
+    const addCart = (item) => {
+        setCartShop(saveData("local-s", "cart", "kasd", 0, 0, item))
+    }
+
+    const inFav = (item) => {
+        const test = favorites.filter(({ id }) => id === item.id)
+        if (test.length > 0) {
+            return false
+        } else {
+            return true
+        }
+    }
+
+    const inCart = (item) => {
+        const test = cartShop.filter(({ id }) => id === item.id)
+        if (test.length > 0) {
+            return false
+        } else {
+            return true
+        }
+    }
+
     return (
         <div className="page home">
             <SearchModal />
+            <FavoritesModal />
+            <CartModal />
             <header className="text-red-700 p-[12px] bg-white sticky top-0 flex justify-between items-center gap-2.5 shadow-sm z-1">
                 <button id="logo" className="font-extrabold w-full text-3xl cursor-default!"><a href={baseUrl} className="text-red-700! w-fit cursor-pointer">WebShop <FontAwesomeIcon icon={faShoppingCart} /></a></button>
 
@@ -44,8 +81,11 @@ export default function Home() {
 
                     <div className="flex items-center gap-2.5">
                         <FontAwesomeIcon icon={faMagnifyingGlass} className="sm:hidden!" onClick={() => openModal("search-modal")} />
-                        <FontAwesomeIcon icon={faHeart} />
-                        <FontAwesomeIcon icon={faShoppingCart} />
+                        <FontAwesomeIcon icon={faHeart} onClick={() => openModal('favorites-modal')} />
+                        <div className="relative flex justify-center">
+                            {cartShop.length > 0 && <span className="absolute right-[-5.5px] top-[-8.5px] ml-[2px] text-[.6rem] h-fit pointer-events-none">{cartShop.length}</span>}
+                            <FontAwesomeIcon icon={faShoppingCart} onClick={() => openModal("cart-modal")} />
+                        </div>
                         <FontAwesomeIcon icon={faEllipsisVertical} />
                     </div>
                 </div>
@@ -78,16 +118,23 @@ export default function Home() {
                     <h2 className="text-2xl text-bold text-white">Promos da semana</h2>
                     <hr className="my-[3px_10px] border-[1.5px] border-white" />
                     <div className="flex gap-2.5 overflow-x-auto pb-2.5">
-                        {produtos.map(({ nome, lista_img, descricao }, index) => {
+                        {produtos.map(({ nome, lista_img, descricao, valor }, index) => {
                             return (
                                 <div className="item flex flex-col items-center justify-between min-w-[200px] max-w-[100px] p-[10px] bg-white rounded-md relative shadow-[0_0_5px_rgb(0,0,0,.3)]" key={"img" + index}>
                                     <img src={"/webshop-2/" + lista_img[0] + ".jpg"} alt="" className=" rounded-md" />
                                     <div>
                                         <h4 className="text-[.8rem] font-bold">{nome}</h4>
+                                        <p>{numberForBrl(valor)}</p>
                                         <p className="text-[.6rem] truncate w-45">{descricao}</p>
                                     </div>
-                                    <nav className="absolute top-[5px] right-[5px] text-white">
-                                        <FontAwesomeIcon icon={faHeart} className="bg-red-600 p-[9px_7px] rounded-full text-1.1rem" />
+                                    <nav className="absolute flex flex-col gap-1.5 top-[5px] right-[5px] text-white text-sm [&>svg]:bg-red-600 [&>svg]:p-[9px_7px] [&>svg]:rounded-full">
+                                        {inFav(produtos[index]) ?
+                                            <FontAwesomeIcon icon={faHeart} onClick={() => newFavorite(produtos[index])} /> :
+                                            <FontAwesomeIcon icon={faHeartCircleCheck} />}
+
+                                        {inCart(produtos[index]) ?
+                                            <FontAwesomeIcon icon={faCartShopping} onClick={() => addCart(produtos[index])} /> :
+                                            <FontAwesomeIcon icon={faCartArrowDown} />}
                                     </nav>
                                 </div>
                             )
