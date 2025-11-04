@@ -25,12 +25,19 @@
             & .slide-base {
                 & nav {
                     & button {
-                        background-color: white;
+                        background-color: rgba(0, 0, 0, 0.412);
                         border: none;
                         padding: 4px;
 
+                        &[selected]{
+                            background-color: rgb(0, 15, 90) !important;
+                            scale: 1.2;
+                            margin-inline: .5px;
+                        }
+
                         &:hover {
-                            background-color: rgb(118, 0, 0) !important;
+                            background-color: rgb(0, 3, 23) !important;
+                            scale: 1.1;
                         }
                     }
                 }

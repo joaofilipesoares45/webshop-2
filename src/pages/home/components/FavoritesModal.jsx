@@ -27,13 +27,13 @@ export default function FavoritesModal() {
                     {favorites.length > 0 ?
                         favorites.map(({ nome, valor, lista_img }, index) => {
                             return (
-                                <div className="item relative overflow-hidden flex animate-[var(--show-top)] justify-between gap-2 bg-[#b71414e6] text-white shadow-[0_0_3px_rgb(0,0,0,.2)] rounded-sm p-[5px] hover:[&>nav]:transform-none" key={"fav" + index}>
+                                <div className="item relative overflow-hidden flex animate-[var(--show-top)] justify-between gap-2 bg-[#610303e6] text-white shadow-[0_0_3px_rgb(0,0,0,.2)] rounded-sm p-[5px] hover:[&>nav]:transform-none" key={"fav" + index}>
                                     <div className="px-[5px]">
                                         <h2 className="text-[.8rem]">{nome}</h2>
                                         <p className="text-[.9rem] font-bold">{numberForBrl(valor)}</p>
                                     </div>
                                     <img src={"/webshop-2/" + lista_img[0] + ".jpg"} alt="" className="max-w-[80px] rounded-sm" />
-                                    <nav className="absolute top-[5px] right-[5px] w-[80px] h-[calc(100%_-_9px)] transform-[translateX(200px)] transition-all flex flex-col justify-evenly items-center gap-1.5 rounded-sm bg-[#ffffff] text-black [&>svg]:text-[1.1rem] [&>svg]:hover:text-red-600">
+                                    <nav className="absolute top-[5px] right-[5px] w-[80px] h-[calc(100%_-_9px)] transform-[translateX(200px)] transition-all flex flex-col justify-evenly items-center gap-1.5 rounded-sm bg-[#ffffff] text-black [&>svg]:text-[1.1rem] [&>svg]:hover:text-red-700">
                                         <FontAwesomeIcon icon={faCartShopping} onClick={() => addCart(favorites[index])}/>
                                         <FontAwesomeIcon icon={faHeartBroken} onClick={() => deleteFavorite(favorites[index])} />
                                     </nav>

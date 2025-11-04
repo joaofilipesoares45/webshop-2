@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faCartArrowDown, faCartShopping, faCode, faEllipsisVertical, faHeart, faHeartCircleCheck, faMagnifyingGlass, faShoppingCart } from "@fortawesome/free-solid-svg-icons"
+import { faCartArrowDown, faCartShopping, faCode, faHeart, faHeartCircleCheck, faMagnifyingGlass, faShoppingCart, faStar, faStarHalfAlt } from "@fortawesome/free-solid-svg-icons"
 import { faGithub, faInstagram, faLinkedin, faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 import { baseUrl, whatsMsg, openLink, openModal, numberForBrl } from "../../utils/functions"
 import Slide from "../../components/Slide"
@@ -44,6 +44,10 @@ export default function Home() {
         setFavorites(saveData("local-s", "favorites", 'vbnv', 0, 0, item))
     }
 
+    const deleteFavorite = (item) => {
+        setFavorites(saveData("local-s", "favorites", undefined, "id", item.id, undefined));
+    }
+
     const addCart = (item) => {
         setCartShop(saveData("local-s", "cart", "kasd", 0, 0, item))
         openModal("new-item-modal")
@@ -68,13 +72,13 @@ export default function Home() {
     }
 
     return (
-        <div className="page home bg-gray-300">
+        <div className="page home bg-gray-200">
             <SearchModal />
             <FavoritesModal />
             <CartModal />
             <NewCartItem />
-            <header className="text-white p-[12px] bg-red-950 sticky top-0 flex justify-between items-center gap-2.5 shadow-sm z-1">
-                <button id="logo" className="font-extrabold w-full text-3xl cursor-default!"><a href={baseUrl} className="text-white! w-fit cursor-pointer">WebShop <FontAwesomeIcon icon={faShoppingCart} /></a></button>
+            <header className="bg-gray-200 text-gray-800 p-[12px]  sticky top-0 flex justify-between items-center gap-2.5 z-1">
+                <button id="logo" className="font-extrabold w-full text-[1.2rem] md:text-3xl cursor-default!"><a href={baseUrl} className="text-gray-800! w-fit cursor-pointer">WebShop <FontAwesomeIcon icon={faShoppingCart} /></a></button>
 
                 <div id="options" className="flex gap-2.5">
                     <div className="relative sm:flex items-center w-full max-w-[350px] hidden">
@@ -89,82 +93,63 @@ export default function Home() {
                             {cartShop.length > 0 && <span className="absolute right-[-5.5px] top-[-8.5px] ml-[2px] text-[.6rem] h-fit pointer-events-none">{cartShop.length}</span>}
                             <FontAwesomeIcon icon={faShoppingCart} onClick={() => openModal("cart-modal")} />
                         </div>
-                        <FontAwesomeIcon icon={faEllipsisVertical} />
                     </div>
                 </div>
 
-                <div id="categories" className="flex justify-center w-full gap-10 text-nowrap text-[.70rem] border-t-2 pt-[12px] border-white">
+                <div id="categories" className="flex justify-center w-full gap-10 text-nowrap text-[.7rem] border-t-2 pt-[12px] border-white font-[550]">
                     <button className="hover:underline">PC gamer</button>
                     <button className="hover:underline">Acessorios</button>
                     <button className="hover:underline">Smartphones</button>
                     <button className="hover:underline">Monitores</button>
                 </div>
             </header>
-            {/* <header className="text-red-700 p-[12px] bg-white sticky top-0 flex justify-between items-center gap-2.5 shadow-sm z-1">
-                <button id="logo" className="font-extrabold w-full text-3xl cursor-default!"><a href={baseUrl} className="text-red-700! w-fit cursor-pointer">WebShop <FontAwesomeIcon icon={faShoppingCart} /></a></button>
-
-                <div id="options" className="flex gap-2.5">
-                    <div className="relative sm:flex items-center w-full max-w-[350px] hidden">
-                        <input type="text" placeholder="Buscar..." className="bg-white p-[8px_15px] text-red-950 w-[100%] text-sm rounded-[17px]! shadow-[0_0_3px_rgb(0,0,0,.3)] placeholder-red-700" />
-                        <FontAwesomeIcon icon={faMagnifyingGlass} className="absolute right-2 text-red-950" />
-                    </div>
-
-                    <div className="flex items-center gap-2.5">
-                        <FontAwesomeIcon icon={faMagnifyingGlass} className="sm:hidden!" onClick={() => openModal("search-modal")} />
-                        <FontAwesomeIcon icon={faHeart} onClick={() => openModal('favorites-modal')} />
-                        <div className="relative flex justify-center">
-                            {cartShop.length > 0 && <span className="absolute right-[-5.5px] top-[-8.5px] ml-[2px] text-[.6rem] h-fit pointer-events-none">{cartShop.length}</span>}
-                            <FontAwesomeIcon icon={faShoppingCart} onClick={() => openModal("cart-modal")} />
-                        </div>
-                        <FontAwesomeIcon icon={faEllipsisVertical} />
-                    </div>
-                </div>
-
-                <div id="categories" className="flex justify-center w-full gap-10 text-nowrap text-[.70rem] border-t-2 pt-[12px] border-red-400">
-                    <button className="hover:underline">PC gamer</button>
-                    <button className="hover:underline">Acessorios</button>
-                    <button className="hover:underline">Smartphones</button>
-                    <button className="hover:underline">Monitores</button>
-                </div>
-            </header> */}
             <main>
-                <section className="banner relative p-[15px] sm:py-[40px_20px] py-[40px] bg-gray-300">
+                <section className="banner relative p-[15px] sm:p-[20px] bg-gray-300 mx-2.5 mt-[5px] rounded-md">
                     <Slide len={3}>
                         {[1, 2, 3].map((item) => {
                             return (
-                                <div className="item flex w-full max-w-[1000px] items-center justify-between gap-[10px] md:gap-[25px] md:p-[50px] p-[10px] rounded-sm bg-white shadow-[0_0_5px_rgb(0,0,0,.3)]" key={"img" + item}>
-                                    <div>
-                                        <h1 className="font-bold text-sm sm:text-4xl text-red-950">Contagem regressiva para a <br /> Mega-promoção de ferias!!</h1>
-                                        <p className="font-medium text-sm sm:text-2xl mt-2.5">Descontos incriveis de até <span className="font-extrabold text-xl sm:text-4xl ml-1 text-red-600">60% off</span></p>
+                                <div className="item w-full max-w-[1000px] bg-white shadow-[0_0_5px_rgb(0,0,0,.14)] gap-[10px] p-[20px] md:p-[40px] flex justify-between flex-col-reverse items-center  md:flex-row rounded-sm relative" key={"img" + item}>
+                                    <div className="w-full absolute bottom-0 bg-[rgba(255,255,255,0.86)] p-2.5 md:bg-transparent md:relative flex flex-col md:gap-5">
+                                        <h1 className="font-bold text-sm md:text-4xl text-red-950">Contagem regressiva para a <br /> Mega-promoção de ferias!!</h1>
+                                        <p className="font-medium text-sm md:text-2xl">Descontos incriveis de até <span className="font-extrabold text-xl md:text-4xl ml-1 text-red-600">60% off</span></p>
                                     </div>
-                                    <img src={"/webshop-2/imagem " + item + ".jpg"} alt="" className="w-[100%] max-w-[150px] rounded-md md:max-w-[200px] sm:max-w-[250px]" />
+                                    <img src={`/webshop-2/imagem ${item}.png`} alt="" className="w-[100%] max-w-[300px] rounded-md mb-[40px] md:m-0"/>
                                 </div>
                             )
                         })}
                     </Slide>
                 </section>
 
-                <section className="promo bg-red-950 p-5">
-                    <h2 className="text-2xl text-bold text-white">Promos da semana</h2>
-                    <hr className="my-[3px_10px] border-[1.5px] border-white" />
-                    <div className="list flex gap-2.5 overflow-x-auto pb-2.5">
-                        {produtos.map(({ nome, lista_img, descricao, valor }, index) => {
+                <section className="promo p-5">
+                    <h2 className="text-xl text-bold">Ofertas da semana</h2>
+                    <hr className="my-[3px_10px] border-[1.5px] border-black" />
+                    <div className="list flex gap-2.5 overflow-x-auto pb-2.5 ">
+                        {produtos.map(({ nome, lista_img, valor }, index) => {
                             return (
-                                <div className="item flex flex-col items-center justify-between min-w-[190px] sm:min-w-[200px] sm:max-w-[100px] p-[10px] bg-white rounded-md relative shadow-[0_0_5px_rgb(0,0,0,.3)]" key={"img" + index}>
+                                <div className="item flex flex-col items-center justify-between min-w-[160px] sm:min-w-[300px] sm:max-w-[100px] p-[10px] bg-white rounded-md relative shadow-[0_0_5px_rgb(0,0,0,.3)]" key={"img" + index}>
                                     <img src={"/webshop-2/" + lista_img[0] + ".jpg"} alt="" className="rounded-md" />
-                                    <div>
-                                        <h4 className="font-bold text-[.7rem] sm:text-[.8rem]">{nome}</h4>
-                                        <p>{numberForBrl(valor)}</p>
-                                        <p className="text-[.6rem] truncate w-45">{descricao}</p>
+                                    <div className="w-full">
+                                        <h4 className="text-[.6rem] sm:text-[.7rem] text-gray-600 font-[500]">{nome}</h4>
+                                        <p className="font-semibold text-[.7rem]">{numberForBrl(valor)}</p>
+                                        <div className="flex justify-between items-center flex-wrap gap-1 mt-1 text-xs">
+                                            <div className="flex flex-nowrap text-[.6rem]">
+                                                <FontAwesomeIcon icon={faStar} />
+                                                <FontAwesomeIcon icon={faStar} />
+                                                <FontAwesomeIcon icon={faStar} />
+                                                <FontAwesomeIcon icon={faStar} />
+                                                <FontAwesomeIcon icon={faStarHalfAlt} />
+                                            </div>
+                                            <span className="text-gray-400 truncate">+1.000 vend.</span>
+                                        </div>
                                     </div>
-                                    <nav className="absolute flex flex-col gap-1.5 top-[5px] right-[5px] text-white text-sm [&>svg]:bg-red-700 [&>svg]:p-[8px_6px] [&>svg]:rounded-full sm:[&>svg]:p-[9px_7px]"> 
+                                    <nav className="absolute flex flex-col gap-1.5 top-[5px] right-[5px] text-white text-sm [&>svg]:bg-red-700 [&>svg]:p-[8px_6px] [&>svg]:rounded-full sm:[&>svg]:p-[9px_7px] [&>svg:hover]:bg-red-950">
                                         {inFav(produtos[index]) ?
                                             <FontAwesomeIcon icon={faHeart} onClick={() => newFavorite(produtos[index])} /> :
-                                            <FontAwesomeIcon icon={faHeartCircleCheck} />}
+                                            <FontAwesomeIcon icon={faHeartCircleCheck} className="animate-[expand_.5s]" onClick={() => deleteFavorite(produtos[index])}/>}
 
                                         {inCart(produtos[index]) ?
                                             <FontAwesomeIcon icon={faCartShopping} onClick={() => addCart(produtos[index])} /> :
-                                            <FontAwesomeIcon icon={faCartArrowDown} />}
+                                            <FontAwesomeIcon icon={faCartArrowDown} className="animate-[shake_.3s]"/>}
                                     </nav>
                                 </div>
                             )
@@ -172,9 +157,9 @@ export default function Home() {
                     </div>
 
                 </section>
-                <footer>
+                <section className="">
 
-                </footer>
+                </section>
             </main>
             <footer className="bottom-page">
                 <h2><FontAwesomeIcon icon={faCode} /><span>Desenvolvedor</span>João Filipe Viana</h2>
