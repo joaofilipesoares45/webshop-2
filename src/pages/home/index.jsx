@@ -1,13 +1,13 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCartArrowDown, faCartShopping, faCode, faHeart, faHeartCircleCheck, faMagnifyingGlass, faShoppingCart, faStar, faStarHalfAlt } from "@fortawesome/free-solid-svg-icons"
 import { faGithub, faInstagram, faLinkedin, faWhatsapp } from "@fortawesome/free-brands-svg-icons";
-import { baseUrl, whatsMsg, openLink, openModal, numberForBrl } from "../../utils/functions"
+import { baseUrl, whatsMsg, openLink, openModal, numberForBrl, formCaptureData } from "../../utils/functions"
 import Slide from "../../components/Slide"
 import "./css/index.css"
 import SearchModal from "./components/SearchModal";
 import { saveData } from "../../utils/save-functions";
 import FavoritesModal from "./components/FavoritesModal";
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 import { DataContext } from "../../context/DataContext";
 import CartModal from "./components/CartModal";
 import NewCartItem from "./components/NewCartItem";
@@ -39,6 +39,8 @@ const produtos = [{
 
 export default function Home() {
     const { favorites, setFavorites, cartShop, setCartShop } = useContext(DataContext)
+    const form = useRef(null)
+    const listDivs = useRef(null)
 
     const newFavorite = (item) => {
         setFavorites(saveData("local-s", "favorites", 'vbnv', 0, 0, item))
@@ -71,6 +73,23 @@ export default function Home() {
         }
     }
 
+    const searchFunc = () => {
+        const { search } = formCaptureData(form.current)
+        const divs = listDivs.current.querySelectorAll(".item")
+        if (search) {
+            divs.forEach(element => {
+                const nome = element.textContent
+                if (nome.toUpperCase().includes(search.toUpperCase())) {
+                    element.setAttribute("visible", "")
+                } else {
+                    element.removeAttribute("visible")
+                }
+            });
+        } else {
+            divs.forEach(element => element.removeAttribute("visible"))
+        }
+    }
+
     return (
         <div className="page home bg-gray-200">
             <SearchModal />
@@ -81,14 +100,22 @@ export default function Home() {
                 <button id="logo" className="font-extrabold w-full text-[1.2rem] md:text-3xl cursor-default!"><a href={baseUrl} className="text-gray-800! w-fit cursor-pointer">WebShop <FontAwesomeIcon icon={faShoppingCart} /></a></button>
 
                 <div id="options" className="flex gap-2.5">
-                    <div className="relative sm:flex items-center w-full max-w-[350px] hidden">
-                        <input type="text" placeholder="Buscar..." className="bg-white p-[8px_15px] text-red-950 w-[100%] text-sm rounded-[17px]! shadow-[0_0_3px_rgb(0,0,0,.3)] placeholder-black" />
+                    <div className="relative sm:flex items-center w-full max-w-[350px] hidden" ref={form}>
+                        <input type="text" placeholder="Buscar..." name="search" className="bg-white p-[8px_15px] text-red-950 w-[100%] text-sm rounded-[17px]! shadow-sm placeholder-black" onKeyUp={() => searchFunc()}/>
                         <FontAwesomeIcon icon={faMagnifyingGlass} className="absolute right-2 text-red-950" />
+
+                        <div className="w-full bg-white absolute top-[calc(100%_+_5px)] shadow-md rounded-xs flex-col overflow-hidden" id="list" ref={listDivs}>
+                            {produtos.map(({ nome }, i) => {
+                                return (
+                                    <span className="item text-[.75rem] p-2.5 [[visible]]:flex [[visible]]:animate-[var(--show-top)] hidden cursor-pointer hover:bg-gray-600 hover:text-white hover:flex  truncate" key={"llil" + i}>{nome}</span>
+                                )
+                            })}
+                        </div>
                     </div>
 
                     <div className="flex items-center gap-2.5">
                         <FontAwesomeIcon icon={faMagnifyingGlass} className="sm:hidden!" onClick={() => openModal("search-modal")} />
-                        <FontAwesomeIcon icon={faHeart} onClick={() => openModal('favorites-modal')} />
+                        <FontAwesomeIcon icon={faHeart} onClick={() => openModal('favorites-modal')} type={favorites.length > 0 ? "true" : "false"} />
                         <div className="relative flex justify-center">
                             {cartShop.length > 0 && <span className="absolute right-[-5.5px] top-[-8.5px] ml-[2px] text-[.6rem] h-fit pointer-events-none">{cartShop.length}</span>}
                             <FontAwesomeIcon icon={faShoppingCart} onClick={() => openModal("cart-modal")} />
@@ -113,7 +140,7 @@ export default function Home() {
                                         <h1 className="font-bold text-sm md:text-4xl text-red-950">Contagem regressiva para a <br /> Mega-promoção de ferias!!</h1>
                                         <p className="font-medium text-sm md:text-2xl">Descontos incriveis de até <span className="font-extrabold text-xl md:text-4xl ml-1 text-red-600">60% off</span></p>
                                     </div>
-                                    <img src={`/webshop-2/imagem ${item}.png`} alt="" className="w-[100%] max-w-[300px] rounded-md mb-[40px] md:m-0"/>
+                                    <img src={`/webshop-2/imagem ${item}.png`} alt="" className="w-[100%] max-w-[300px] rounded-md mb-[40px] md:m-0" />
                                 </div>
                             )
                         })}
@@ -131,7 +158,7 @@ export default function Home() {
                                     <div className="w-full">
                                         <h4 className="text-[.6rem] sm:text-[.7rem] text-gray-600 font-[500]">{nome}</h4>
                                         <p className="font-semibold text-[.7rem]">{numberForBrl(valor)}</p>
-                                        <div className="flex justify-between items-center flex-wrap gap-1 mt-1 text-xs">
+                                        <div className="flex justify-between items-center  gap-1 mt-1 text-xs">
                                             <div className="flex flex-nowrap text-[.6rem]">
                                                 <FontAwesomeIcon icon={faStar} />
                                                 <FontAwesomeIcon icon={faStar} />
@@ -145,11 +172,11 @@ export default function Home() {
                                     <nav className="absolute flex flex-col gap-1.5 top-[5px] right-[5px] text-white text-sm [&>svg]:bg-red-700 [&>svg]:p-[8px_6px] [&>svg]:rounded-full sm:[&>svg]:p-[9px_7px] [&>svg:hover]:bg-red-950">
                                         {inFav(produtos[index]) ?
                                             <FontAwesomeIcon icon={faHeart} onClick={() => newFavorite(produtos[index])} /> :
-                                            <FontAwesomeIcon icon={faHeartCircleCheck} className="animate-[expand_.5s]" onClick={() => deleteFavorite(produtos[index])}/>}
+                                            <FontAwesomeIcon icon={faHeartCircleCheck} className="animate-[expand_.5s]" onClick={() => deleteFavorite(produtos[index])} />}
 
                                         {inCart(produtos[index]) ?
                                             <FontAwesomeIcon icon={faCartShopping} onClick={() => addCart(produtos[index])} /> :
-                                            <FontAwesomeIcon icon={faCartArrowDown} className="animate-[shake_.3s]"/>}
+                                            <FontAwesomeIcon icon={faCartArrowDown} className="animate-[shake_.3s]" />}
                                     </nav>
                                 </div>
                             )

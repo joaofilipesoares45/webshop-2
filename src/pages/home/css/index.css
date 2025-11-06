@@ -12,6 +12,11 @@
         & #options {
             grid-area: opt;
             justify-content: flex-end;
+
+            svg.fa-heart[type="true"]{
+                animation: expand 1s infinite;
+                color: red;
+            }
         }
 
         & #categories {

@@ -6,7 +6,7 @@ import { saveData } from "../../../utils/save-functions"
 import { DataContext } from "../../../context/DataContext"
 
 export default function FavoritesModal() {
-    const { favorites, setFavorites, setCartShop } = useContext(DataContext)
+    const { favorites, setFavorites, cartShop, setCartShop } = useContext(DataContext)
 
     const deleteFavorite = (item) => {
         setFavorites(saveData("local-s", "favorites", undefined, "id", item.id, undefined));
@@ -19,6 +19,15 @@ export default function FavoritesModal() {
         openModal("cart-modal")
     }
 
+    const inCart = (item) => {
+        const test = cartShop.filter(({ id }) => id === item.id)
+        if (test.length > 0) {
+            return false
+        } else {
+            return true
+        }
+    }
+
     return (
         <div className="modal favorites-modal bg-[rgba(0,0,0,0.76)] flex justify-end [[open]]:[&>div.content]:animate-[var(--show-left)]">
             <div className="content bg-white  h-full w-full max-w-[430px] p-2.5 flex flex-col">
@@ -27,14 +36,14 @@ export default function FavoritesModal() {
                     {favorites.length > 0 ?
                         favorites.map(({ nome, valor, lista_img }, index) => {
                             return (
-                                <div className="item relative overflow-hidden flex animate-[var(--show-top)] justify-between gap-2 bg-[#610303e6] text-white shadow-[0_0_3px_rgb(0,0,0,.2)] rounded-sm p-[5px] hover:[&>nav]:transform-none" key={"fav" + index}>
+                                <div className="item relative overflow-hidden flex animate-[var(--show-top)] justify-between gap-2 bg-[#ff1100f6] text-white shadow-[0_0_3px_rgb(0,0,0,.2)] rounded-sm p-[5px] hover:[&>nav]:transform-none" key={"fav" + index}>
                                     <div className="px-[5px]">
                                         <h2 className="text-[.8rem]">{nome}</h2>
                                         <p className="text-[.9rem] font-bold">{numberForBrl(valor)}</p>
                                     </div>
                                     <img src={"/webshop-2/" + lista_img[0] + ".jpg"} alt="" className="max-w-[80px] rounded-sm" />
                                     <nav className="absolute top-[5px] right-[5px] w-[80px] h-[calc(100%_-_9px)] transform-[translateX(200px)] transition-all flex flex-col justify-evenly items-center gap-1.5 rounded-sm bg-[#ffffff] text-black [&>svg]:text-[1.1rem] [&>svg]:hover:text-red-700">
-                                        <FontAwesomeIcon icon={faCartShopping} onClick={() => addCart(favorites[index])}/>
+                                        {inCart(favorites[index]) && <FontAwesomeIcon icon={faCartShopping} onClick={() => addCart(favorites[index])}/>}
                                         <FontAwesomeIcon icon={faHeartBroken} onClick={() => deleteFavorite(favorites[index])} />
                                     </nav>
                                 </div>

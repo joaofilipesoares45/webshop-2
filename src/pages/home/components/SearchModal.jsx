@@ -32,7 +32,7 @@ export default function SearchModal() {
         event.preventDefault()
     }
 
-    const searchFun = () => {
+    const searchFunc = () => {
         const { search } = formCaptureData(form.current)
         const divs = listDivs.current.querySelectorAll(".item")
         if (search) {
@@ -48,11 +48,12 @@ export default function SearchModal() {
             divs.forEach(element => element.removeAttribute("visible"))
         }
     }
+
     return (
         <div className="modal search-modal bg-[rgba(0,0,0,0.76)]">
             <form onSubmit={submit} className="bg-white flex" autoComplete="off" ref={form}>
                 <div className="w-full flex">
-                    <input type="text" name="search" id="search" placeholder="O que está buscando hoje?" onKeyUp={searchFun} className="w-full p-2.5 m-2.5 border-2 border-gray-200 focus:border-gray-900" />
+                    <input type="text" name="search" id="search" placeholder="O que está buscando hoje?" onKeyUp={searchFunc} className="w-full p-2.5 m-2.5 border-2 border-gray-200 focus:border-gray-900" />
                 </div>
                 <span className="flex items-center">
                     <FontAwesomeIcon icon={faXmark} onClick={() => closeModal("search-modal")} className="text-2xl p-2" />

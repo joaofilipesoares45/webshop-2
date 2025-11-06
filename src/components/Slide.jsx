@@ -5,8 +5,12 @@ export default function Slide({ len, children }) {
     const [position, setPosition] = useState()
     const list = useRef(null)
     const [vis, setVis] = useState(1)
+    const nav = useRef(null)
+    const [count, setCount] = useState(1)
+    const [brk, setBrk] = useState(false)
 
     const slideRoller = (value) => {
+        setBrk(true)
         const listSlide = document.querySelectorAll(`.${styles.list} .item`)
         const listBtns = document.querySelectorAll(`.${styles.nav} button`)
 
@@ -47,6 +51,43 @@ export default function Slide({ len, children }) {
         setVis(positions.to + 1)
     }
 
+    const slideRollerBtn = (ev) => {
+        if (ev.clientX !== 0) {
+            setBrk(true)
+        }
+        
+        const {target} = ev
+        const listBtns = document.querySelectorAll(`.${styles.nav} button`)
+        if (target.tagName !== "BUTTON") {
+            return
+        }
+
+        listBtns.forEach(el => el.removeAttribute("selected"))
+        listBtns.forEach(el => {
+            if (el.id === target.id) {
+                el.setAttribute("selected", "")
+            }
+        })
+
+        const listSlide = document.querySelectorAll(`.${styles.list} .item`)
+        let actual
+        listSlide.forEach((el, index) => {
+            if (el.hasAttribute("visible")) {
+                el.removeAttribute("visible")
+                actual = index
+            }
+        })
+        listSlide[Number(target.id)].setAttribute("visible", "true")
+        setVis(Number(target.id) + 1)
+        if (actual < Number(target.id)) {
+            listSlide[actual + 1].setAttribute("side", "left")
+        }
+
+        if (actual > Number(target.id)) {
+            listSlide[actual - 1].setAttribute("side", "right")
+        }
+    }
+
     useEffect(() => {
         if (list !== null) {
             const arr = Array.prototype.slice.call(list.current.children)
@@ -60,6 +101,20 @@ export default function Slide({ len, children }) {
         }
     }, [list])
 
+    useEffect(() => {
+        if (brk === false) {
+            const arr = Array.prototype.slice.call(nav.current.children)
+            setTimeout(() => {
+                arr[count].click()
+                if (count < arr.length - 1) {
+                    setCount(count + 1)
+                } else {
+                    setCount(0)
+                }
+            }, 5000)
+        }
+    })
+
     return (
         <div className={`${styles.slide} slide-base`} onTouchStart={(event) => setPosition(event.touches[0].clientX)} onTouchEnd={(event) => {
             if (event.changedTouches[0].clientX < position - 80) {
@@ -72,37 +127,7 @@ export default function Slide({ len, children }) {
                 {children}
             </div>
 
-            <nav className={styles.nav} onClick={({ target }) => {
-                const listBtns = document.querySelectorAll(`.${styles.nav} button`)
-                if (target.tagName !== "BUTTON") {
-                    return
-                }
-
-                listBtns.forEach(el => el.removeAttribute("selected"))
-                listBtns.forEach(el => {
-                    if (el.id === target.id) {
-                        el.setAttribute("selected", "")
-                    }
-                })
-
-                const listSlide = document.querySelectorAll(`.${styles.list} .item`)
-                let actual
-                listSlide.forEach((el, index) => {
-                    if (el.hasAttribute("visible")) {
-                        el.removeAttribute("visible")
-                        actual = index
-                    }
-                })
-                listSlide[Number(target.id)].setAttribute("visible", "true")
-                setVis(Number(target.id) + 1)
-                if (actual < Number(target.id)) {
-                    listSlide[actual + 1].setAttribute("side", "left")
-                }
-
-                if (actual > Number(target.id)) {
-                    listSlide[actual - 1].setAttribute("side", "right")
-                }
-            }}>
+            <nav className={styles.nav} onClick={slideRollerBtn} ref={nav}>
                 {Array.from({ length: len }).map((_, index) => {
                     return (
                         <button key={"slide-btn" + index} id={index} selected={index === 0 && true}></button>

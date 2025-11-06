@@ -1,3 +1,27 @@
+@keyframes show-left {
+  0% {
+    transform: translateX(200px);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(0px);
+    opacity: 1;
+  }
+}
+
+@keyframes show-right {
+  0% {
+    transform: translateX(-200px);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(0px);
+    opacity: 1;
+  }
+}
+
 .slide {
     display: flex;
     flex-direction: column;
@@ -16,11 +40,11 @@
         display: flex;
 
         &[side="left"] {
-            animation: var(--show-left);
+            animation: show-left .4s;
         }
 
         &[side="right"] {
-            animation: var(--show-right);
+            animation: show-right .4s;
         }
     }
 }
