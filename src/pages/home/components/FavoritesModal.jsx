@@ -36,7 +36,7 @@ export default function FavoritesModal() {
                     {favorites.length > 0 ?
                         favorites.map(({ nome, valor, lista_img }, index) => {
                             return (
-                                <div className="item relative overflow-hidden flex animate-[var(--show-top)] justify-between gap-2 bg-[#ff1100f6] text-white shadow-[0_0_3px_rgb(0,0,0,.2)] rounded-sm p-[5px] hover:[&>nav]:transform-none" key={"fav" + index}>
+                                <div className="item relative overflow-hidden flex animate-[var(--show-top)] justify-between gap-2 bg-[#ff3700] text-white shadow-[0_0_3px_rgb(0,0,0,.2)] rounded-sm p-[5px] hover:[&>nav]:transform-none" key={"fav" + index}>
                                     <div className="px-[5px]">
                                         <h2 className="text-[.8rem]">{nome}</h2>
                                         <p className="text-[.9rem] font-bold">{numberForBrl(valor)}</p>
